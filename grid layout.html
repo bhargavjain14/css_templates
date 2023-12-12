@@ -1,0 +1,49 @@
+<html>
+<head>
+  <style type="text/css">
+    /* Define the flex container */
+    .flex-container {
+      float: right;
+      display: flex; /* Use the flexbox model */
+      flex-wrap: wrap; /* Allow the items to wrap into multiple rows */
+      justify-content: space-between; /* Distribute the items evenly along the main axis */
+      align-items: center; /* Align the items vertically in the center */
+      background-color: lightgray; /* Set the background color of the container */
+      margin: 10px; /* Add some margin around the container */
+      padding: 10px; /* Add some padding inside the container */
+      width: 30%; /* Set the width of the container to 30% of the page width */
+      border: 3px solid #000; /* Add a border around the container */
+      box-sizing: border-box; /* Include the border and padding in the width calculation */
+    }
+
+    /* Define the flex items */
+    .flex-item {
+      width: 45%; /* Set the width of each item to 45% of the container's width */
+      height: 100px; /* Set the height of each item to 100px */
+      margin: 5px; /* Add some margin around each item */
+      background-color: cornflowerblue; /* Set the background color of each item */
+      color: white; /* Set the text color of each item */
+      font-size: 24px; /* Set the font size of each item */
+      text-align: center; /* Center the text inside each item */
+      line-height: 100px; /* Vertically center the text inside each item */
+    }
+  </style>
+  <title>Flexbox Example</title>
+</head>
+<body>
+  <!-- Create the flex container -->
+  <div class="flex-container">
+    <!-- Create n number of flex items -->
+    <div class="flex-item">Team 1</div>
+    <div class="flex-item">Team 2</div>
+    <div class="flex-item">Team 3</div>
+    <div class="flex-item">Team 4</div>
+    <div class="flex-item">Team 5</div>
+    <div class="flex-item">Team 6</div>
+    <div class="flex-item">Team 7</div>
+    <div class="flex-item">Team 8</div>
+    <div class="flex-item">Team 9</div>
+    <div class="flex-item">Team 10</div>
+  </div>
+</body>
+</html>
