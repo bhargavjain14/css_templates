@@ -1,0 +1,59 @@
+/* styles.css or your.component.css */
+.backdrop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Adjust the transparency as needed */
+  backdrop-filter: blur(5px); /* Adjust the blur intensity as needed */
+  z-index: 9999; /* Ensure it's above other elements */
+}
+
+
+---
+// your.component.ts
+
+import { ConfirmationService } from 'primeng/api';
+
+@Component({
+  // ...
+})
+export class YourComponent implements OnInit {
+  public isDialogVisible = false;
+
+  constructor(private confirmationService: ConfirmationService) {}
+
+  ngOnInit() {
+    this.confirmationService.onShow.subscribe(() => {
+      this.isDialogVisible = true;
+    });
+
+    this.confirmationService.onHide.subscribe(() => {
+      this.isDialogVisible = false;
+    });
+  }
+
+  showDialog() {
+    this.confirmationService.confirm({
+      header: 'Confirmation',
+      message: 'Are you sure?',
+      accept: () => {
+        // Handle confirmation
+      },
+      reject: () => {
+        // Handle rejection
+      },
+    });
+  }
+}
+
+
+<!-- Your component's HTML file -->
+<div *ngIf="isDialogVisible" class="backdrop-overlay"></div>
+
+<!-- Your other content -->
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle" [closable]="false">
+  <!-- Confirm dialog content -->
+</p-confirmDialog>
