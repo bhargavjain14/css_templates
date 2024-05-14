@@ -1,0 +1,196 @@
+
+describe('AgGrid Component', () => {
+  let component: YourComponent; // Replace with your actual component
+
+  beforeEach(() => {
+    // Initialize your component
+    component = new YourComponent(); // Replace with your actual component initialization
+  });
+
+  it('should filter correctly', () => {
+    const filterComparator = component.gridOptions.columnDefs[0].filterParams.comparator;
+    expect(filterComparator(50, '100')).toBe(1);
+    expect(filterComparator(50, '50')).toBe(0);
+    expect(filterComparator(50, '25')).toBe(-1);
+    expect(filterComparator(50, null)).toBe(-1);
+  });
+
+  it('should sort correctly', () => {
+    const sortComparator = component.gridOptions.columnDefs[0].comparator;
+    expect(sortComparator('100', '50')).toBe(50);
+    expect(sortComparator('50', '50')).toBe(0);
+    expect(sortComparator('25', '50')).toBe(-25);
+    expect(sortComparator(null, '50')).toBe(-1);
+    expect(sortComparator('50', null)).toBe(1);
+  });
+});
+======================
+
+{
+  field: 'birthday', // Replace with your actual field name
+  valueGetter: (params) => {
+    if (params.data) {
+      // Check if the birthday is null or undefined
+      let birthday = params.data.birthday;
+      if (birthday == null) {
+        return ''; // or any value that suits your needs
+      }
+
+      // Convert the date from 'YYYY-MM-DD' to 'MM/DD/YYYY'
+      let dateParts = birthday.split("-");
+      return `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+    } else {
+      // If the data is null or undefined, return an empty string
+      return '';
+    }
+  },
+  filter: 'agDateColumnFilter',
+  filterParams: {
+    comparator: function(filterLocalDateAtMidnight, cellValue) {
+      // cellValue is in 'MM/DD/YYYY' format because of the valueGetter
+      // Convert cellValue to a Date object if it's a string
+      if (cellValue) {
+        let dateParts = cellValue.split("/");
+        cellValue = new Date(Number(dateParts[2]), Number(dateParts[0]) - 1, Number(dateParts[1]));
+      }
+
+      if (cellValue < filterLocalDateAtMidnight) {
+        return -1;
+      } else if (cellValue > filterLocalDateAtMidnight) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  },
+  comparator: function(valueA, valueB, nodeA, nodeB, isInverted) {
+    // valueA and valueB are in 'MM/DD/YYYY' format because of the valueGetter
+    // Convert valueA and valueB to Date objects if they're strings
+    if (valueA) {
+      let datePartsA = valueA.split("/");
+      valueA = new Date(Number(datePartsA[2]), Number(datePartsA[0]) - 1, Number(datePartsA[1]));
+    }
+    if (valueB) {
+      let datePartsB = valueB.split("/");
+      valueB = new Date(Number(datePartsB[2]), Number(datePartsB[0]) - 1, Number(datePartsB[1]));
+    }
+
+    if (valueA == null) return -1;
+    if (valueB == null) return 1;
+
+    return valueA.getTime() - valueB.getTime();
+  }
+}
+
+//-----------
+
+describe('AgGrid Component', () => {
+  let component: YourComponent; // Replace with your actual component
+
+  beforeEach(() => {
+    // Initialize your component
+    component = new YourComponent(); // Replace with your actual component initialization
+  });
+
+  it('should filter correctly', () => {
+    const filterComparator = component.gridOptions.columnDefs[0].filterParams.comparator;
+    expect(filterComparator(new Date(2000, 0, 1), '01/01/2000')).toBe(0);
+    expect(filterComparator(new Date(2000, 0, 1), '12/31/1999')).toBe(1);
+    expect(filterComparator(new Date(2000, 0, 1), '01/02/2000')).toBe(-1);
+    expect(filterComparator(new Date(2000, 0, 1), null)).toBe(-1);
+  });
+
+  it('should sort correctly', () => {
+    const sortComparator = component.gridOptions.columnDefs[0].comparator;
+    expect(sortComparator('01/01/2000', '12/31/1999')).toBe(86400000);
+    expect(sortComparator('01/01/2000', '01/01/2000')).toBe(0);
+    expect(sortComparator('01/01/2000', '01/02/2000')).toBe(-86400000);
+    expect(sortComparator(null, '01/01/2000')).toBe(-1);
+    expect(sortComparator('01/01/2000', null)).toBe(1);
+  });
+});
+===============================================
+
+
+{
+  field: 'dateTime', // Replace with your actual field name
+  filter: 'agDateColumnFilter',
+  filterParams: {
+    comparator: function(filterLocalDateAtMidnight, cellValue) {
+      // Check if cellValue is null or undefined
+      if (cellValue == null) {
+        return -1; // or any value that suits your needs
+      }
+
+      // Convert cellValue to a Date object
+      let date = new Date(cellValue);
+      if (isNaN(date.getTime())) {
+        // cellValue could not be parsed to a Date, try parsing it as 'MM/DD/YYYY'
+        let dateParts = cellValue.split("/");
+        date = new Date(Number(dateParts[2]), Number(dateParts[0]) - 1, Number(dateParts[1]));
+      }
+
+      if (date < filterLocalDateAtMidnight) {
+        return -1;
+      } else if (date > filterLocalDateAtMidnight) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  },
+  comparator: function(valueA, valueB, nodeA, nodeB, isInverted) {
+    // Check if valueA or valueB is null or undefined
+    if (valueA == null) return -1;
+    if (valueB == null) return 1;
+
+    // Convert valueA and valueB to Date objects
+    let dateA = new Date(valueA);
+    let dateB = new Date(valueB);
+    if (isNaN(dateA.getTime())) {
+      // valueA could not be parsed to a Date, try parsing it as 'MM/DD/YYYY'
+      let datePartsA = valueA.split("/");
+      dateA = new Date(Number(datePartsA[2]), Number(datePartsA[0]) - 1, Number(datePartsA[1]));
+    }
+    if (isNaN(dateB.getTime())) {
+      // valueB could not be parsed to a Date, try parsing it as 'MM/DD/YYYY'
+      let datePartsB = valueB.split("/");
+      dateB = new Date(Number(datePartsB[2]), Number(datePartsB[0]) - 1, Number(datePartsB[1]));
+    }
+
+    return dateA.getTime() - dateB.getTime();
+  }
+}
+=============================
+
+describe('AgGrid Component', () => {
+  let component: YourComponent; // Replace with your actual component
+
+  beforeEach(() => {
+    // Initialize your component
+    component = new YourComponent(); // Replace with your actual component initialization
+  });
+
+  it('should filter correctly', () => {
+    const filterComparator = component.gridOptions.columnDefs[0].filterParams.comparator;
+    expect(filterComparator(new Date(2000, 0, 1), '01/01/2000')).toBe(0);
+    expect(filterComparator(new Date(2000, 0, 1), '12/31/1999')).toBe(1);
+    expect(filterComparator(new Date(2000, 0, 1), '01/02/2000')).toBe(-1);
+    expect(filterComparator(new Date(2000, 0, 1), null)).toBe(-1);
+    expect(filterComparator(new Date(2000, 0, 1, 18, 45), '01/01/2000 06:45 PM')).toBe(0);
+  });
+
+  it('should sort correctly', () => {
+    const sortComparator = component.gridOptions.columnDefs[0].comparator;
+    expect(sortComparator('01/01/2000', '12/31/1999')).toBe(86400000);
+    expect(sortComparator('01/01/2000', '01/01/2000')).toBe(0);
+    expect(sortComparator('01/01/2000', '01/02/2000')).toBe(-86400000);
+    expect(sortComparator(null, '01/01/2000')).toBe(-1);
+    expect(sortComparator('01/01/2000', null)).toBe(1);
+    expect(sortComparator('01/01/2000 06:45 PM', '01/01/2000 06:44 PM')).toBe(60000);
+  });
+});
+
+
+
+
