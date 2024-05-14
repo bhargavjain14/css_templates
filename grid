@@ -1,0 +1,33 @@
+{
+  field: 'accountNumber', // Replace with your actual field name
+  filter: 'agNumberColumnFilter',
+  filterParams: {
+    comparator: function(filterLocalDateAtMidnight, cellValue) {
+      // Check if cellValue is null or undefined
+      if (cellValue == null) {
+        return -1; // or any value that suits your needs
+      }
+
+      // Convert cellValue to string if it's a number
+      if (typeof cellValue === 'number') {
+        cellValue = cellValue.toString();
+      }
+
+      // Remove hyphens from the cell value
+      var cleanCellValue = Number(cellValue.replace(/-/g, ''));
+
+      if (cleanCellValue < filterLocalDateAtMidnight) {
+        return -1;
+      } else if (cleanCellValue > filterLocalDateAtMidnight) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  },
+  comparator: function(valueA, valueB, nodeA, nodeB, isInverted) {
+    valueA = valueA ? valueA.toString().replace(/-/g, '') : '';
+    valueB = valueB ? valueB.toString().replace(/-/g, '') : '';
+    return valueA.localeCompare(valueB);
+  }
+}
