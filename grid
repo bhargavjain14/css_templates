@@ -1,0 +1,33 @@
+{
+  field: 'dateTime', // Replace with your actual field name
+  comparator: function(valueA, valueB, nodeA, nodeB, isInverted) {
+    // Check if valueA or valueB is null or undefined
+    if (valueA == null) return -1;
+    if (valueB == null) return 1;
+
+    // Convert valueA and valueB to Date objects
+    let dateA = new Date(valueA);
+    let dateB = new Date(valueB);
+
+    return dateA.getTime() - dateB.getTime();
+  }
+}
+==============
+
+describe('AgGrid Component', () => {
+  let component: YourComponent; // Replace with your actual component
+
+  beforeEach(() => {
+    // Initialize your component
+    component = new YourComponent(); // Replace with your actual component initialization
+  });
+
+  it('should sort correctly', () => {
+    const sortComparator = component.gridOptions.columnDefs[0].comparator;
+    expect(sortComparator('01/01/2000 06:45 PM', '01/01/2000 06:44 PM')).toBe(60000);
+    expect(sortComparator('01/01/2000 06:45 PM', '01/01/2000 06:45 PM')).toBe(0);
+    expect(sortComparator('01/01/2000 06:45 PM', '01/01/2000 06:46 PM')).toBe(-60000);
+    expect(sortComparator(null, '01/01/2000 06:45 PM')).toBe(-1);
+    expect(sortComparator('01/01/2000 06:45 PM', null)).toBe(1);
+  });
+});
