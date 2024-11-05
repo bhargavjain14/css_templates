@@ -114,5 +114,23 @@ export class FileExplorerComponent {
 }
 
 =======
+<!-- src/app/file-explorer/file-explorer.component.html -->
+<div>
+  <input [(ngModel)]="path" placeholder="Enter path" />
+  <button (click)="loadFiles()">Load Files</button>
+</div>
+<div *ngIf="files.length > 0">
+  <ul>
+    <li *ngFor="let file of files" (click)="displayFileContent(file.path)">
+      {{ file.name }} ({{ file.isDirectory ? 'Directory' : 'File' }})
+    </li>
+  </ul>
+</div>
+<div *ngIf="selectedFileContent">
+  <h2>File Content</h2>
+  <pre>{{ selectedFileContent }}</pre>
+</div>
 
+===========
+node index.js
 https://copilot.microsoft.com/chats/8P8bQahfH6MwemL4a2eHr
